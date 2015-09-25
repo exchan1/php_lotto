@@ -1,4 +1,8 @@
 <?php
+/*
+ * 로또 분석 프로그램
+ * 2015.09.24 - 최초 프로그램 작성 >> 기존의 당첨된 로또번호를 웹에서 가져와서 화면출력
+ */
 include 'class.snoopy.php';
 header("Content-Type: text/html; charset=UTF-8");
 
