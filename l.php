@@ -41,6 +41,9 @@ $lottoNo = array();
 	<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+	<script src="/resources/excel-bootstrap-table-filter-bundle.js"></script>
+	<link rel="stylesheet" href="/resources/excel-bootstrap-table-filter-style.css">
+
 	<!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
 	<!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
 	<!--[if lt IE 9]>
@@ -105,6 +108,7 @@ $lottoNo = array();
 		});
 
 		getAllNo();
+		$('#lotte_list').excelTableFilter();
 	});
 
 	var countNo = function(){
@@ -151,7 +155,16 @@ $lottoNo = array();
 			h += "<th>"+i+"</th><td>0</td>";
 		}
 		$('#count>tbody').html(h);
-	}
+	};
+
+	var colToggle = function(obj){
+		console.log($(obj).parent().css('background-color'));
+		if($(obj).parent().css('background-color')=='rgba(0, 0, 0, 0)') {
+			$(obj).parent().css('background-color', '#ffcc66');
+		} else {
+			$(obj).parent().css('background-color', '');
+		}
+	};
 
 	var getAllNo = function(){
 		$.ajax({
@@ -165,7 +178,7 @@ $lottoNo = array();
 				var hh = '';
 				$.each(data,function(i){
 					hh += '<tr>';
-					hh += '<td>'+data[i].lno+'</td>';
+					hh += '<td onclick="colToggle(this)">'+data[i].lno+'</td>';
 					hh += '<td>'+data[i].n1+'</td>';
 					hh += '<td>'+data[i].n2+'</td>';
 					hh += '<td>'+data[i].n3+'</td>';
@@ -281,7 +294,7 @@ $lottoNo = array();
 			<table style="width:100%">
 			<tr>
 				<td>
-					<table class="table">
+					<table class="table" id="lotte_list">
 					<thead>
 					<tr>
 						<th>회차</th>
