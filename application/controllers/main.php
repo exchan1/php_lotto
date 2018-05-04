@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * 로또 파싱 & 분석 프로그램 Beta Version
+ * @author : exchan1@gmail.com
+ */
 class Main extends CI_Controller
 {
 

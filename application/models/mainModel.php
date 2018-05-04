@@ -11,13 +11,16 @@
   PRIMARY KEY (`no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8*/
 
-class MainModel extends CI_Model {
-    public function __construct() {
+class MainModel extends CI_Model
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
-    public function insertLotto($no,$param){
+    public function insertLotto($no,$param)
+    {
         $data = array(
             'no'=>$no,
             'n1'=>$param[0],
