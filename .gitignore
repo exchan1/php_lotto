@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+application/config/database.php
+
+**/upload/
+**/*.xml
+**/*.iml
