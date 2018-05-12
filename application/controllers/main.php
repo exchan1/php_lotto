@@ -11,8 +11,8 @@ class Main extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('Snoopy');
-        $this->load->model('MainModel');
+        $this->load->library(array('Snoopy'));
+        $this->load->model(array('MainModel'));
     }
 
     public function index()
@@ -22,10 +22,12 @@ class Main extends CI_Controller
         $no         = $this->getNo($html);
         $lottoNo    = $this->getLotto($html);
 
-        /* $toCsv = file_get_contents(APPPATH.'lotto.csv');
+        /*
+        $toCsv = file_get_contents(APPPATH.'lotto.csv');
         $toCsv .= "\n".$kai.",";
         $toCsv .= implode(",", $lottoNo);
-        file_put_contents(APPPATH.'lotto.csv', $toCsv); */
+        file_put_contents(APPPATH.'lotto.csv', $toCsv);
+        */
 
         $this->MainModel->insertLotto($no,$lottoNo);
         $this->load->view('main', array('data'=>$no, 'lotto'=>$lottoNo));
@@ -33,7 +35,6 @@ class Main extends CI_Controller
 
     private function getHtml($kai)
     {
-        // $this->load->library('Snoopy');
         $getUrl = "http://www.645lotto.net/lotto645Confirm.do?method=byWin&drwNo=".$kai;
         return $this->snoopy->fetch($getUrl);
     }
