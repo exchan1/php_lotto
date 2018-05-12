@@ -3,7 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * 로또 파싱 & 분석 프로그램 Beta Version
- * @author : exchan1@gmail.com
+ * 
+ * @author : dkkim <exchan1@gmail.com>
  */
 class Main extends CI_Controller
 {
@@ -29,7 +30,7 @@ class Main extends CI_Controller
         file_put_contents(APPPATH.'lotto.csv', $toCsv);
         */
 
-        $this->MainModel->insertLotto($no,$lottoNo);
+        $this->MainModel->insertLotto($no, $lottoNo);
         $this->load->view('main', array('data'=>$no, 'lotto'=>$lottoNo));
     }
 
@@ -42,10 +43,10 @@ class Main extends CI_Controller
     private function getLotto($html)
     {
         $pattern = '/img src="\/img\/common\/ball_[0-9]*.png/';
-        preg_match_all($pattern, $this->snoopy->results,$out);
+        preg_match_all($pattern, $this->snoopy->results, $out);
         $arrNo = array();
         for ($i=0;$i<=6;$i++) {
-            $num[$i] = str_replace(".png","",str_replace('img src="/img/common/ball_',"",$out[0][$i]));
+            $num[$i] = str_replace(".png", "", str_replace('img src="/img/common/ball_', "", $out[0][$i]));
             if ($i==6) {
                 $arrNo[$i] = $num[$i];
             } else {
@@ -58,10 +59,11 @@ class Main extends CI_Controller
     private function getNo($kai)
     {
         $pattern = '/<option value="[0-9]*"\s*>(.*?)<\/option>/';
-        preg_match_all($pattern,$this->snoopy->results,$out);
+        preg_match_all($pattern, $this->snoopy->results, $out);
         $arrNo = array();
         $select = '';
-        for ($i=0 ; $i < sizeof($out[0]) ; $i++ ){
+        $size = sizeof($out[0]);
+        for ($i=0 ; $i < $size ; $i++ ) {
             $arrNo[$i] = $out[0][$i];
         }
         return $arrNo;
