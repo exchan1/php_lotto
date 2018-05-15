@@ -72,7 +72,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
         <select name="kai" onchange="location.href='?kai='+this.value">
             <?php
             foreach ($data as $k => $v) {
-                echo($v);
+                ?><option value="<?=$v?>"><?=$v?></option><?
             }
             ?>
         </select>

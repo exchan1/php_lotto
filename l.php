@@ -5,7 +5,7 @@
  */
 
 $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
-include './application/libraries/snoopy.php';
+include './application/libraries/Snoopy.php';
 header("Content-Type: text/html; charset=UTF-8");
 
 $snoopy = new snoopy;
