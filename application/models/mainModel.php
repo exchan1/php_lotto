@@ -22,14 +22,3 @@ class MainModel extends CI_Model
         return $this->db->insert('no', $data);
     }
 }
-
-/*CREATE TABLE `no` (
-  `no` int(11) NOT NULL,
-  `n1` int(11) DEFAULT NULL,
-  `n2` int(11) DEFAULT NULL,
-  `n3` int(11) DEFAULT NULL,
-  `n4` int(11) DEFAULT NULL,
-  `n5` int(11) DEFAULT NULL,
-  `n6` int(11) DEFAULT NULL,
-  PRIMARY KEY (`no`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8*/
