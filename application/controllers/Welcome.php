@@ -95,6 +95,7 @@ class Welcome extends CI_Controller
         $nums       = $this->MainModel->getNos();
         $in_no      = array();
         $msg        = "*자동 로또 번호 등록 안내* \n\n";
+        $msg        .= "*".date("Y.m.d h:i")."*\n";
         foreach ($no as $k=>$v) {
             if (!in_array($v, $nums)) {
                 $this->insertNo($v);
@@ -114,7 +115,6 @@ class Welcome extends CI_Controller
     private function insertNo($kai)
     {
         $html       = $this->getHtml($kai);
-        $no         = $this->getNo($html);
         $lottoNo    = $this->getLotto($html);
         $this->MainModel->insertLotto($kai, $lottoNo);
     }
@@ -139,7 +139,34 @@ class Welcome extends CI_Controller
     private function recommend($msg)
     {
         $msg .= ":smile: :smile:";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
         return $msg;
+    }
+
+    private function bomb()
+    {
+        $getUrl = "http://www.lottobomb.com/main/home";
+        $html = $this->snoopy->fetch($getUrl);
+        $pattern = '/data-to="(.*?)"\s*/';
+        $numbers = array();
+        preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
+        $i = 0;
+        $str = '';
+        foreach ($out as $k => $v) {
+            $str .= (($i>0) ? ',':'').$v[1];
+            if (5==$i) {
+                array_push($numbers, $str);
+                $i = 0;
+                $str = '';
+            } else {
+                $i++;
+            }
+        }
+        $msg = "==========\n\n";
+        $msg .= "*`lottobomb` 추천*\n";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= implode("\n", $numbers);
+        $this->slack($msg);
     }
 
 

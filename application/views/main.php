@@ -41,7 +41,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 
         });
 
-        $('.btnRecommend, .btnLottoNo').on('click', function(){
+        $('.btnRecommend, .btnLottoNo, .btnLottoBomb').on('click', function(){
             var url = $(this).data('url');
             $.get(url);
         });
@@ -125,8 +125,9 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     <div class="form-group">
         <textarea id="slackMsg" class="form-control" rows="5"></textarea>
         <button type="button" class="btn btn-primary btnSlackTest">Slack Test</button>
-        <button type="button" class="btn btn-primary btnRecommend" data-url="http://exchan1.woobi.co.kr/?mode=autolotto">로또추천 테스트</button>
-        <button type="button" class="btn btn-primary btnLottoNo" data-url="http://exchan1.woobi.co.kr/?mode=autolottono">로또 등록 테스트</button>
+        <button type="button" class="btn btn-primary btnRecommend" data-url="/?mode=autolotto">로또추천 테스트</button>
+        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록 테스트</button>
+        <button type="button" class="btn btn-primary btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
     </div>
 </div>
 <!-- /container -->
@@ -135,3 +136,13 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 
 </body>
 </html>
+
+
+<!-- http://www.lottobomb.com/main/home -->
+
+<!-- ============
+3 6 12 24 35 36
+3 9 12 33 41 43
+4 6 11 27 29 42
+1 6 7 15 33 39
+10 11 29 36 43 45 -->
