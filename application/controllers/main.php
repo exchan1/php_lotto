@@ -18,14 +18,23 @@ class Main extends CI_Controller
 
     public function index()
     {
+    }
+
+    public function main()
+    {
         $kai        = $this->input->get_post('kai');
         $kai        = (empty($kai)) ? 1 : $kai;
         $html       = $this->getHtml($kai);
         $no         = $this->getNo($html);
         $lottoNo    = $this->getLotto($html);
+        $data       = array(
+            'data'=>$no
+            ,'lotto'=>$lottoNo
+            ,'class' => __CLASS__
+        );
 
         $this->MainModel->insertLotto($kai, $lottoNo);
-        $this->load->view('main', array('data'=>$no, 'lotto'=>$lottoNo));
+        $this->load->view('main', $data);
     }
 
     public function getLottoNoAuto()
@@ -79,4 +88,29 @@ class Main extends CI_Controller
         }
         return $arrNo;
     }
+
+    public function slacktest()
+    {
+        $this->slack('slack test!!');
+    }
+
+    private function slack($message, $room = "lottobot", $icon = ":longbox:")
+    {
+        $room = ($room) ? $room : "lottobot";
+        $data = "payload=" . json_encode(array(
+            "channel"       =>  "#{$room}",
+            "text"          =>  $message,
+            "icon_emoji"    =>  $icon
+        ));
+        $ch = curl_init("https://hooks.slack.com/services/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");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
 }
+
+
+// https://hooks.slack.com/services/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 

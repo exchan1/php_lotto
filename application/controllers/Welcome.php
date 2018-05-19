@@ -5,19 +5,10 @@ class Welcome extends CI_Controller
 {
 
     /**
-     * Index Page for this controller.
-     *
-     * Maps to the following URL
-     * 		http://example.com/index.php/welcome
-     *	- or -
-     * 		http://example.com/index.php/welcome/index
-     *	- or -
-     * Since this controller is set as the default controller in
-     * config/routes.php, it's displayed at http://example.com/
-     *
-     * So any other public methods not prefixed with an underscore will
-     * map to /index.php/welcome/<method_name>
-     * @see http://codeigniter.com/user_guide/general/urls.html
+     * 로또 파싱 & 분석 프로그램 Beta Version
+     * 
+     * @author : dkkim <exchan1@gmail.com>
+     * @todo : Main Controller 접근 기능 수정 필요함.
      */
     public function __construct()
     {
@@ -26,16 +17,40 @@ class Welcome extends CI_Controller
         $this->load->model(array('MainModel'));
     }
 
+    public function _remap($method, $args = array())
+    {
+        if (strrpos($method, "_ajax") !== false) { $this->{"{$method}"}(); return; }
+        if (strrpos($method, "_exec") !== false) { $this->{"{$method}"}(); return; }
+        if (strrpos($method, "_popup") !== false) { $this->{"{$method}"}(); return; }
+        $this->{"{$method}"}();
+    }
+
+
     public function index()
+    {
+        $mode = $this->input->get('mode');
+        if (!empty($mode)) {
+            $this->{"{$mode}"}();
+        } else {
+            $this->main();
+        }
+    }
+
+    public function main()
     {
         $kai        = $this->input->get_post('kai');
         $kai        = (empty($kai)) ? 1 : $kai;
         $html       = $this->getHtml($kai);
         $no         = $this->getNo($html);
         $lottoNo    = $this->getLotto($html);
+        $data       = array(
+            'data'=>$no
+            ,'lotto'=>$lottoNo
+            ,'class' => __CLASS__
+        );
 
         $this->MainModel->insertLotto($kai, $lottoNo);
-        $this->load->view('main', array('data'=>$no, 'lotto'=>$lottoNo));
+        $this->load->view('main', $data);
     }
 
     private function getHtml($kai)
@@ -72,4 +87,95 @@ class Welcome extends CI_Controller
         }
         return $arrNo;
     }
+
+    private function autolottoNo()
+    {
+        $html       = $this->getHtml(1);
+        $no         = $this->getNo($html);
+        $nums       = $this->MainModel->getNos();
+        $in_no      = array();
+        $msg        = "*자동 로또 번호 등록 안내* \n\n";
+        foreach ($no as $k=>$v) {
+            if (!in_array($v, $nums)) {
+                $this->insertNo($v);
+                array_push($in_no, $v);
+            }
+        }
+
+        if (!empty($in_no)) {
+            $msg .= ">>> 아래 회차 등록\n\n";
+            $msg .= implode(',', $in_no);
+            $this->slack($msg);
+        } else {
+            $this->slack($msg.'>>> 모든 회차가 등록 되어 있음.');
+        }
+    }
+
+    private function insertNo($kai)
+    {
+        $html       = $this->getHtml($kai);
+        $no         = $this->getNo($html);
+        $lottoNo    = $this->getLotto($html);
+        $this->MainModel->insertLotto($kai, $lottoNo);
+    }
+
+    private function debug($data)
+    {
+        print "<div style='background:#000000;color:#00ff00;padding:10px;text-align:left'><xmp style=\"font:8pt 'Courier New'\">";
+        print_r($data);
+        print "</xmp></div>";
+    }
+
+    private function autolotto()
+    {
+        $msg = $this->input->post('msg');
+        $msg = (empty($msg)) ? "*자동 로또번호 추천 안내* \n\n" : $msg;
+        $msg = $this->recommend($msg);
+        $re['result'] = $this->slack($msg);
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    private function recommend($msg)
+    {
+        $msg .= ":smile: :smile:";
+        return $msg;
+    }
+
+
+
+
+
+
+
+
+
+    public function slacktest()
+    {
+        $msg = $this->input->post('msg');
+        $msg = (empty($msg)) ? 'empty message!!' : $msg;
+        $re['result'] = $this->slack($msg);
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    private function slack($message, $room = "lottobot", $icon = ":longbox:")
+    {
+        $room = ($room) ? $room : "lottobot";
+        $data = "payload=" . json_encode(array(
+            "channel"       =>  "#{$room}",
+            "text"          =>  $message,
+            "icon_emoji"    =>  $icon
+        ));
+        $ch = curl_init("https://hooks.slack.com/services/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");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
 }
+
+
+// http://exchan1.woobi.co.kr/?mode=autolotto

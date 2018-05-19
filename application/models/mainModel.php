@@ -33,4 +33,14 @@ class MainModel extends CI_Model
         ->where('lno', $no)
         ->count_all_results('lotto');
     }
+
+    public function getNos()
+    {
+        $re = $this->db->select('lno')->get('lotto')->result_array();
+        $arr = array();
+        foreach ($re as $k=>$v) {
+            $arr[$k] = $v['lno'];
+        }
+        return $arr;
+    }
 }
