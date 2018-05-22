@@ -283,7 +283,7 @@ class Welcome extends CI_Controller
             "text"          =>  $message,
             "icon_emoji"    =>  $icon
         ));
-        $ch = curl_init("https://hooks.slack.com/services/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");
+        $ch = curl_init(config_item('slackHook'));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
