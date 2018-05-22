@@ -152,6 +152,7 @@ class Welcome extends CI_Controller
         preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
         $i = 0;
         $str = '';
+        $nextLno = $this->MainModel->getLotNo()+1;
         foreach ($out as $k => $v) {
             $str .= (($i>0) ? ',':'').$v[1];
             if (5==$i) {
@@ -163,7 +164,55 @@ class Welcome extends CI_Controller
             }
         }
         $msg = "==========\n\n";
-        $msg .= "*`lottobomb` 추천*\n";
+        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= implode("\n", $numbers);
+        $this->slack($msg);
+        $this->insertRecommend($numbers, $nextLno);
+    }
+
+    private function insertRecommend($numbers, $nextLno)
+    {
+        foreach ($numbers as $k=>$v) {
+            $tmp = explode(',', $v);
+            $param = array(
+                'lno' => $nextLno
+                ,'n1' => $tmp[0]
+                ,'n2' => $tmp[1]
+                ,'n3' => $tmp[2]
+                ,'n4' => $tmp[3]
+                ,'n5' => $tmp[4]
+                ,'n6' => $tmp[5]
+            );
+            $this->MainModel->insertRecommend($param);
+        }
+    }
+
+    private function lottoresult()
+    {
+        $lno = $this->MainModel->getLotNo();
+        $rec = $this->MainModel->getRecommend($lno);
+        $res = $this->MainModel->getLotResult($lno);
+        $res = $res[0];
+        $numbers = array();
+        foreach ($rec as $k=>$v) {
+            $n1 = array_search($res['n1'], $v);
+            $n2 = array_search($res['n2'], $v);
+            $n3 = array_search($res['n3'], $v);
+            $n4 = array_search($res['n4'], $v);
+            $n5 = array_search($res['n5'], $v);
+            $n6 = array_search($res['n6'], $v);
+            if ($n1) $rec[$k][$n1] = '`'.$v[$n1].'`';
+            if ($n2) $rec[$k][$n2] = '`'.$v[$n2].'`';
+            if ($n3) $rec[$k][$n3] = '`'.$v[$n3].'`';
+            if ($n4) $rec[$k][$n4] = '`'.$v[$n4].'`';
+            if ($n5) $rec[$k][$n5] = '`'.$v[$n5].'`';
+            if ($n6) $rec[$k][$n6] = '`'.$v[$n6].'`';
+
+            array_push($numbers, implode(',', $rec[$k]));
+        }
+        $msg = "==========\n\n";
+        $msg .= "*`lottobomb` {$lno}회차 당첨안내*\n";
         $msg .= "*".date("Y.m.d h:i")."*\n";
         $msg .= implode("\n", $numbers);
         $this->slack($msg);

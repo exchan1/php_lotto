@@ -43,4 +43,33 @@ class MainModel extends CI_Model
         }
         return $arr;
     }
+
+    public function insertRecommend($param)
+    {
+        return $this->db->insert('lotto_recommend', $param);
+    }
+
+    public function getLotNo()
+    {
+        $re = $this->db->select_max('lno')->get('lotto')->result();
+        return intval($re[0]->lno);
+    }
+
+    public function getRecommend($lno)
+    {
+        return $this->db
+            ->select('n1,n2,n3,n4,n5,n6')
+            ->where('lno', $lno)
+            ->get('lotto_recommend')
+            ->result_array();
+    }
+
+    public function getLotResult($lno)
+    {
+        return $this->db
+            ->select('n1,n2,n3,n4,n5,n6')
+            ->where('lno', $lno)
+            ->get('lotto')
+            ->result_array();
+    }
 }
