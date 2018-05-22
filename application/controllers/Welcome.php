@@ -126,23 +126,6 @@ class Welcome extends CI_Controller
         print "</xmp></div>";
     }
 
-    private function autolotto()
-    {
-        $msg = $this->input->post('msg');
-        $msg = (empty($msg)) ? "*자동 로또번호 추천 안내* \n\n" : $msg;
-        $msg = $this->recommend($msg);
-        $re['result'] = $this->slack($msg);
-        header('Content-Type: application/json');
-        echo json_encode($re);
-    }
-
-    private function recommend($msg)
-    {
-        $msg .= ":smile: :smile:";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
-        return $msg;
-    }
-
     private function bomb()
     {
         $getUrl = "http://www.lottobomb.com/main/home";
@@ -214,8 +197,65 @@ class Welcome extends CI_Controller
         $msg = "==========\n\n";
         $msg .= "*`lottobomb` {$lno}회차 당첨안내*\n";
         $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= "*당첨번호 : ".implode(',', $res)."*\n";
         $msg .= implode("\n", $numbers);
         $this->slack($msg);
+    }
+
+    private function autolotto()
+    {
+        $nextLno = $this->MainModel->getLotNo()+1;
+        $msg = $this->input->post('msg');
+        $msg = (empty($msg)) ? "*자동 로또번호 추천 안내 {$nextLno}회차* \n\n" : $msg;
+        $msg = $this->recommend($msg, $nextLno);
+        $re = array();
+        $re['result'] = $this->slack($msg);
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    private function recommend($msg, $nextLno)
+    {
+        $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
+        $list = $this->MainModel->getResultList();
+        $nums = array();
+        $sums = array();
+        $keys = array();
+        $numbers = array();
+        foreach (range(1, 45) as $r) {
+            $nums[$r]=0;
+        }
+        foreach ($list as $k => $v) {
+            $nums[$v['n1']] = $nums[$v['n1']]+1;
+            $nums[$v['n2']] = $nums[$v['n2']]+1;
+            $nums[$v['n3']] = $nums[$v['n3']]+1;
+            $nums[$v['n4']] = $nums[$v['n4']]+1;
+            $nums[$v['n5']] = $nums[$v['n5']]+1;
+            $nums[$v['n6']] = $nums[$v['n6']]+1;
+            array_push($sums, ($v['n1']+$v['n2']+$v['n3']+$v['n4']+$v['n5']+$v['n6']));
+        }
+        rsort($sums);
+        array_splice($sums, 10);
+        foreach ($nums as $k => $v) {
+            if (4 <= $v) array_push($keys, $k);
+        }
+        $i = 0;
+        for (;;) {
+            $rand = array_rand($keys, 6);
+            $tmp = array();
+            foreach ($rand as $v) {
+                array_push($tmp, $keys[$v]);
+            }
+            if (in_array(array_sum($tmp), $sums)) {
+                $s = array_sum($tmp);
+                $msg .= implode(',', $tmp)." : ({$s})\n";
+                array_push($numbers, implode(',', $tmp));
+                $i++;
+                if ($i==3) break;
+            }
+        }
+        $this->insertRecommend($numbers, $nextLno);
+        return $msg;
     }
 
 
