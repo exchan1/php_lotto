@@ -124,6 +124,8 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 
     <div class="form-group">
         <textarea id="slackMsg" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="form-group">
         <button type="button" class="btn btn-primary btnSlackTest">Slack Test</button>
         <button type="button" class="btn btn-primary btnRecommend" data-url="/?mode=autolotto">로또추천 테스트</button>
         <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록 테스트</button>

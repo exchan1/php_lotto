@@ -73,12 +73,12 @@ class MainModel extends CI_Model
             ->result_array();
     }
 
-    public function getResultList()
+    public function getResultList($limit)
     {
         return $this->db
             ->select('n1,n2,n3,n4,n5,n6')
             ->order_by('lno', 'desc')
-            ->limit('30')
+            ->limit($limit)
             ->get('lotto')
             ->result_array();
     }

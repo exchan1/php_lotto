@@ -209,6 +209,7 @@ class Welcome extends CI_Controller
         $msg = (empty($msg)) ? "*자동 로또번호 추천 안내 {$nextLno}회차* \n\n" : $msg;
         $msg = $this->recommend($msg, $nextLno);
         $re = array();
+        $re['msg'] = $msg;
         $re['result'] = $this->slack($msg);
         header('Content-Type: application/json');
         echo json_encode($re);
@@ -217,7 +218,8 @@ class Welcome extends CI_Controller
     private function recommend($msg, $nextLno)
     {
         $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
-        $list = $this->MainModel->getResultList();
+        $point = 0.31;
+        $list = $this->MainModel->getResultList($point*100);
         $nums = array();
         $sums = array();
         $keys = array();
@@ -226,18 +228,20 @@ class Welcome extends CI_Controller
             $nums[$r]=0;
         }
         foreach ($list as $k => $v) {
-            $nums[$v['n1']] = $nums[$v['n1']]+1;
-            $nums[$v['n2']] = $nums[$v['n2']]+1;
-            $nums[$v['n3']] = $nums[$v['n3']]+1;
-            $nums[$v['n4']] = $nums[$v['n4']]+1;
-            $nums[$v['n5']] = $nums[$v['n5']]+1;
-            $nums[$v['n6']] = $nums[$v['n6']]+1;
+            $nums[$v['n1']] = $nums[$v['n1']]+$point;
+            $nums[$v['n2']] = $nums[$v['n2']]+$point;
+            $nums[$v['n3']] = $nums[$v['n3']]+$point;
+            $nums[$v['n4']] = $nums[$v['n4']]+$point;
+            $nums[$v['n5']] = $nums[$v['n5']]+$point;
+            $nums[$v['n6']] = $nums[$v['n6']]+$point;
             array_push($sums, ($v['n1']+$v['n2']+$v['n3']+$v['n4']+$v['n5']+$v['n6']));
+            $point = $point - 0.01;
         }
         rsort($sums);
         array_splice($sums, 10);
+        $nums_avg = array_sum($nums) / count($nums);
         foreach ($nums as $k => $v) {
-            if (4 <= $v) array_push($keys, $k);
+            if ($nums_avg <= $v) array_push($keys, $k);
         }
         $i = 0;
         for (;;) {
@@ -254,6 +258,12 @@ class Welcome extends CI_Controller
                 if ($i==3) break;
             }
         }
+        /*
+        $this->debug($sums);
+        $this->debug($keys);
+        $this->debug($nums);
+        $this->debug($numbers);
+        */
         $this->insertRecommend($numbers, $nextLno);
         return $msg;
     }
