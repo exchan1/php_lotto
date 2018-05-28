@@ -82,4 +82,11 @@ class MainModel extends CI_Model
             ->get('lotto')
             ->result_array();
     }
+
+    public function deleteRecommend($kai)
+    {
+        return $this->db
+            ->where('lno', $kai)
+            ->delete('lotto_recommend');
+    }
 }

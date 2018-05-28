@@ -38,11 +38,15 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
             }).done(function(data) {
                 console.log(data);
             });
-
         });
 
         $('.btnRecommend, .btnLottoNo, .btnLottoBomb').on('click', function(){
             var url = $(this).data('url');
+            $.get(url);
+        });
+
+        $('.btnLottoDel').on('click', function(){
+            var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
             $.get(url);
         });
     });
@@ -127,10 +131,11 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-primary btnSlackTest">Slack Test</button>
-        <button type="button" class="btn btn-primary btnRecommend" data-url="/?mode=autolotto">로또추천 테스트</button>
-        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록 테스트</button>
+        <button type="button" class="btn btn-primary btnRecommend" data-url="/?mode=autolotto">로또추천</button>
+        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록</button>
         <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=lottoresult">당첨확인</button>
         <button type="button" class="btn btn-primary btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
+        <button type="button" class="btn btn-primary btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
     </div>
 </div>
 <!-- /container -->

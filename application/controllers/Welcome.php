@@ -268,6 +268,14 @@ class Welcome extends CI_Controller
         return $msg;
     }
 
+    public function lottodel()
+    {
+        $kai        = $this->input->get_post('kai');
+        if (!empty($kai)) {
+            $this->MainModel->deleteRecommend($kai);
+        }
+    }
+
 
 
 
