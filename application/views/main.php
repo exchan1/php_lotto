@@ -66,7 +66,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 <div class="container theme-showcase" role="main" style="margin-top:51px;">
     <div class="page-header">
         <h1><?=$kai?> 회차</h1>
-        <select name="kai" onchange="location.href='?kai='+this.value" class="form-control">
+        <select name="kai" id="kaiList" onchange="location.href='?kai='+this.value" class="form-control">
             <?php
             foreach ($data as $k => $v) {
                 ?><option value="<?=$v?>"><?=$v?></option><?

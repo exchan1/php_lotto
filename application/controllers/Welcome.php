@@ -179,7 +179,7 @@ class Welcome extends CI_Controller
 
     private function autolotto()
     {
-        $nextLno = $this->MainModel->getLotNo()+1;
+        $nextLno = $this->getNextLno();
         $msg = $this->input->post('msg');
         $msg = (empty($msg)) ? "*자동 로또번호 추천 안내 {$nextLno}회차* \n\n" : $msg;
         $msg = $this->recommend($msg, $nextLno);
@@ -264,7 +264,7 @@ class Welcome extends CI_Controller
         preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
         $i = 0;
         $str = '';
-        $nextLno = $this->MainModel->getLotNo()+1;
+        $nextLno = $this->getNextLno();
         foreach ($out as $k => $v) {
             $str .= (($i>0) ? ',':'').$v[1];
             if (5==$i) {
@@ -298,6 +298,13 @@ class Welcome extends CI_Controller
         header('Content-Type: application/json');
         echo json_encode($re);
     }
+
+    private function getNextLno()
+    {
+        return $this->MainModel->getLotNo()+1;
+    }
+
+
 
 
 

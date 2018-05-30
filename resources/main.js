@@ -16,15 +16,21 @@ $(document).ready(function(){
 
     $('.btnRecommend, .btnLottoNo, .btnLottoBomb').on('click', function(){
         var url = $(this).data('url');
-        $.get(url);
+        $.get(url, function(){
+            $('.btnRecommendList').trigger('click');
+        });
     });
 
     $('.btnLottoDel').on('click', function(){
+        setNextLno();
         var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
-        $.get(url);
+        $.get(url, function(){
+            $('.btnRecommendList').trigger('click');
+        });
     });
 
     $('.btnRecommendList').on('click', function(){
+        setNextLno();
         var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
         var html = '';
         $('.rec_list').remove();
@@ -49,3 +55,7 @@ $(document).ready(function(){
         });
     });
 });
+
+function setNextLno() {
+    $('#slackMsg').val(($('#kaiList option:first').val()*1)+1);
+}
