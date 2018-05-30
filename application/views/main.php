@@ -24,33 +24,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
         <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script type="text/javascript">
-    $(document).ready(function(){
-        $('[name="kai"]').val($('#kai').val());
-
-        $('.btnSlackTest').on('click', function(){
-            //$.get('/welcome/slacktest');
-            $.ajax({
-                type:'post',
-                url: '/?mode=slacktest',
-                dataType: 'json',
-                data : { msg : $('#slackMsg').val() }
-            }).done(function(data) {
-                console.log(data);
-            });
-        });
-
-        $('.btnRecommend, .btnLottoNo, .btnLottoBomb').on('click', function(){
-            var url = $(this).data('url');
-            $.get(url);
-        });
-
-        $('.btnLottoDel').on('click', function(){
-            var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
-            $.get(url);
-        });
-    });
-    </script>>
+    <script src="/resources/main.js"></script>
 </head>
 <body role="document">
 
@@ -136,6 +110,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
         <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=lottoresult">당첨확인</button>
         <button type="button" class="btn btn-primary btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
         <button type="button" class="btn btn-primary btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
+        <button type="button" class="btn btn-primary btnRecommendList" data-url="/?mode=recommendList">Recommend List</button>
     </div>
 </div>
 <!-- /container -->

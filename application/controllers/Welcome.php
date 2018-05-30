@@ -10,6 +10,9 @@ class Welcome extends CI_Controller
      * @author : dkkim <exchan1@gmail.com>
      * @todo : Main Controller 접근 기능 수정 필요함.
      */
+
+     private $_point = 0.31;
+
     public function __construct()
     {
         parent::__construct();
@@ -126,34 +129,6 @@ class Welcome extends CI_Controller
         print "</xmp></div>";
     }
 
-    private function bomb()
-    {
-        $getUrl = "http://www.lottobomb.com/main/home";
-        $html = $this->snoopy->fetch($getUrl);
-        $pattern = '/data-to="(.*?)"\s*/';
-        $numbers = array();
-        preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
-        $i = 0;
-        $str = '';
-        $nextLno = $this->MainModel->getLotNo()+1;
-        foreach ($out as $k => $v) {
-            $str .= (($i>0) ? ',':'').$v[1];
-            if (5==$i) {
-                array_push($numbers, $str);
-                $i = 0;
-                $str = '';
-            } else {
-                $i++;
-            }
-        }
-        $msg = "==========\n\n";
-        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
-        $msg .= implode("\n", $numbers);
-        $this->slack($msg);
-        $this->insertRecommend($numbers, $nextLno);
-    }
-
     private function insertRecommend($numbers, $nextLno)
     {
         foreach ($numbers as $k=>$v) {
@@ -215,19 +190,15 @@ class Welcome extends CI_Controller
         echo json_encode($re);
     }
 
-    private function recommend($msg, $nextLno)
+    private function getArrayList($nextLno)
     {
-        $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
-        $point = 0.31;
-        $list = $this->MainModel->getResultList($point*100);
+        $re['list'] = $this->MainModel->getResultList($this->_point*100);
         $nums = array();
         $sums = array();
-        $keys = array();
-        $numbers = array();
         foreach (range(1, 45) as $r) {
             $nums[$r]=0;
         }
-        foreach ($list as $k => $v) {
+        foreach ($re['list'] as $k => $v) {
             $nums[$v['n1']] = $nums[$v['n1']]+$point;
             $nums[$v['n2']] = $nums[$v['n2']]+$point;
             $nums[$v['n3']] = $nums[$v['n3']]+$point;
@@ -239,6 +210,22 @@ class Welcome extends CI_Controller
         }
         rsort($sums);
         array_splice($sums, 10);
+        $re['sums'] = $sums;
+        $re['nums'] = $nums;
+        return $re;
+    }
+
+    private function recommend($msg, $nextLno)
+    {
+        $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
+        $point = $this->_point;
+        $arr = $this->getArrayList($nextLno);
+        $list = $arr['list'];
+        $nums = $arr['nums'];
+        $sums = $arr['sums'];
+        $keys = array();
+        $numbers = array();
+        
         $nums_avg = array_sum($nums) / count($nums);
         foreach ($nums as $k => $v) {
             if ($nums_avg <= $v) array_push($keys, $k);
@@ -268,12 +255,48 @@ class Welcome extends CI_Controller
         return $msg;
     }
 
+    private function bomb()
+    {
+        $getUrl = "http://www.lottobomb.com/main/home";
+        $html = $this->snoopy->fetch($getUrl);
+        $pattern = '/data-to="(.*?)"\s*/';
+        $numbers = array();
+        preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
+        $i = 0;
+        $str = '';
+        $nextLno = $this->MainModel->getLotNo()+1;
+        foreach ($out as $k => $v) {
+            $str .= (($i>0) ? ',':'').$v[1];
+            if (5==$i) {
+                array_push($numbers, $str);
+                $i = 0;
+                $str = '';
+            } else {
+                $i++;
+            }
+        }
+        $msg = "==========\n\n";
+        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= implode("\n", $numbers);
+        $this->slack($msg);
+        $this->insertRecommend($numbers, $nextLno);
+    }
+
     public function lottodel()
     {
         $kai        = $this->input->get_post('kai');
         if (!empty($kai)) {
             $this->MainModel->deleteRecommend($kai);
         }
+    }
+
+    private function recommendList()
+    {
+        $kai        = $this->input->get_post('kai');
+        $re = $this->MainModel->getRecommendList($kai);
+        header('Content-Type: application/json');
+        echo json_encode($re);
     }
 
 
