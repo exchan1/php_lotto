@@ -109,9 +109,9 @@ class Welcome extends CI_Controller
         if (!empty($in_no)) {
             $msg .= ">>> 아래 회차 등록\n\n";
             $msg .= implode(',', $in_no);
-            $this->slack($msg);
+            $this->slackSend($msg);
         } else {
-            $this->slack($msg.'>>> 모든 회차가 등록 되어 있음.');
+            $this->slackSend($msg.'>>> 모든 회차가 등록 되어 있음.');
         }
     }
 
@@ -174,7 +174,7 @@ class Welcome extends CI_Controller
         $msg .= "*".date("Y.m.d h:i")."*\n";
         $msg .= "*당첨번호 : ".implode(',', $res)."*\n";
         $msg .= implode("\n", $numbers);
-        $this->slack($msg);
+        $this->slackSend($msg);
     }
 
     private function autolotto()
@@ -185,7 +185,7 @@ class Welcome extends CI_Controller
         $msg = $this->recommend($msg, $nextLno);
         $re = array();
         $re['msg'] = $msg;
-        $re['result'] = $this->slack($msg);
+        $re['result'] = $this->slackSend($msg);
         header('Content-Type: application/json');
         echo json_encode($re);
     }
@@ -279,7 +279,7 @@ class Welcome extends CI_Controller
         $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
         $msg .= "*".date("Y.m.d h:i")."*\n";
         $msg .= implode("\n", $numbers);
-        $this->slack($msg);
+        $this->slackSend($msg);
         $this->insertRecommend($numbers, $nextLno);
     }
 
@@ -307,16 +307,23 @@ class Welcome extends CI_Controller
 
 
 
+
+
+
+
+
+
+
     public function slacktest()
     {
         $msg = $this->input->post('msg');
         $msg = (empty($msg)) ? 'empty message!!' : $msg;
-        $re['result'] = $this->slack($msg);
+        $re['result'] = $this->slackSend($msg);
         header('Content-Type: application/json');
         echo json_encode($re);
     }
 
-    private function slack($message, $room = "lottobot", $icon = ":longbox:")
+    private function slackSend($message, $room = "lottobot", $icon = ":longbox:")
     {
         $room = ($room) ? $room : "lottobot";
         $data = "payload=" . json_encode(array(
