@@ -46,7 +46,7 @@ $(document).ready(function(){
                     html += '<td>'+d[i].n4+'</td>';
                     html += '<td>'+d[i].n5+'</td>';
                     html += '<td>'+d[i].n6+'</td>';
-                    html += '<td></td>';
+                    html += '<td>'+d[i].lno+' 회차 추천</td>';
                     html += '</tr>';
                 }
             }

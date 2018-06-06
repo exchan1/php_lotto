@@ -192,6 +192,7 @@ class Welcome extends CI_Controller
 
     private function getArrayList($nextLno)
     {
+        $point = $this->_point;
         $re['list'] = $this->MainModel->getResultList($this->_point*100);
         $nums = array();
         $sums = array();
@@ -218,7 +219,6 @@ class Welcome extends CI_Controller
     private function recommend($msg, $nextLno)
     {
         $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
-        $point = $this->_point;
         $arr = $this->getArrayList($nextLno);
         $list = $arr['list'];
         $nums = $arr['nums'];
@@ -251,20 +251,60 @@ class Welcome extends CI_Controller
         $this->debug($nums);
         $this->debug($numbers);
         */
+        $msg .= "\n\n==========\n\n".implode(',', $sums);
         $this->insertRecommend($numbers, $nextLno);
         return $msg;
     }
 
     private function bomb()
     {
+        $arrMsg = array();
+        $nextLno = $this->getNextLno();
+        $numbers = $this->getBombList();
+        foreach ($numbers as $k=>$v) {
+            $arr = explode(',', $v);
+            $arrMsg[$k] = $v.' ('.array_sum($arr).')';
+        }
+        $msg = "==========\n\n";
+        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= implode("\n", $arrMsg);
+        $this->insertRecommend($numbers, $nextLno);
+
+        $re = array();
+        $re['msg'] = $msg;
+        $re['result'] = $this->slackSend($msg);
+        header('Content-Type: application/json');
+        echo json_encode($re);
+
+        /* $arrMsg = array();
+        $numbers = array();
+        $nextLno = $this->getNextLno();
+        $arr = $this->getArrayList($nextLno);
+        $sums = $arr['sums'];
+
+        for ($i=0 ; $i < 10 ; $i++) {
+            $tmp = $this->getBombList();
+            foreach ($tmp as $k=>$v) {
+                $arr = explode(',', $v);
+                if (in_array(array_sum($tmp), $sums)) {
+                    array_push($arrMsg, $v.' ('.array_sum($arr).')');
+                    array_push($numbers, $v);
+                }
+            }
+            if (sizeof($numbers)==5) break;
+        } */
+    }
+
+    private function getBombList()
+    {
         $getUrl = "http://www.lottobomb.com/main/home";
         $html = $this->snoopy->fetch($getUrl);
         $pattern = '/data-to="(.*?)"\s*/';
-        $numbers = array();
         preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
+        $numbers = array();
         $i = 0;
         $str = '';
-        $nextLno = $this->getNextLno();
         foreach ($out as $k => $v) {
             $str .= (($i>0) ? ',':'').$v[1];
             if (5==$i) {
@@ -275,17 +315,12 @@ class Welcome extends CI_Controller
                 $i++;
             }
         }
-        $msg = "==========\n\n";
-        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
-        $msg .= implode("\n", $numbers);
-        $this->slackSend($msg);
-        $this->insertRecommend($numbers, $nextLno);
+        return $numbers;
     }
 
     public function lottodel()
     {
-        $kai        = $this->input->get_post('kai');
+        $kai = $this->input->get_post('kai');
         if (!empty($kai)) {
             $this->MainModel->deleteRecommend($kai);
         }
@@ -293,7 +328,7 @@ class Welcome extends CI_Controller
 
     private function recommendList()
     {
-        $kai        = $this->input->get_post('kai');
+        $kai = $this->input->get_post('kai');
         $re = $this->MainModel->getRecommendList($kai);
         header('Content-Type: application/json');
         echo json_encode($re);
