@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller 
+class Welcome extends CI_Controller
 {
 
     /**
      * 로또 파싱 & 분석 프로그램 Beta Version
-     * 
+     *
      * @author : dkkim <exchan1@gmail.com>
      * @todo : Main Controller 접근 기능 수정 필요함.
      */
@@ -225,7 +225,7 @@ class Welcome extends CI_Controller
         $sums = $arr['sums'];
         $keys = array();
         $numbers = array();
-        
+
         $nums_avg = array_sum($nums) / count($nums);
         foreach ($nums as $k => $v) {
             if ($nums_avg <= $v) array_push($keys, $k);
@@ -259,41 +259,59 @@ class Welcome extends CI_Controller
     private function bomb()
     {
         $arrMsg = array();
-        $nextLno = $this->getNextLno();
-        $numbers = $this->getBombList();
-        foreach ($numbers as $k=>$v) {
-            $arr = explode(',', $v);
-            $arrMsg[$k] = $v.' ('.array_sum($arr).')';
-        }
-        $msg = "==========\n\n";
-        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
-        $msg .= implode("\n", $arrMsg);
-        $this->insertRecommend($numbers, $nextLno);
-
-        $re = array();
-        $re['msg'] = $msg;
-        $re['result'] = $this->slackSend($msg);
-        header('Content-Type: application/json');
-        echo json_encode($re);
-
-        /* $arrMsg = array();
         $numbers = array();
         $nextLno = $this->getNextLno();
         $arr = $this->getArrayList($nextLno);
         $sums = $arr['sums'];
 
-        for ($i=0 ; $i < 10 ; $i++) {
+        for ($i=0 ; $i < 100 ; $i++) {
             $tmp = $this->getBombList();
             foreach ($tmp as $k=>$v) {
                 $arr = explode(',', $v);
-                if (in_array(array_sum($tmp), $sums)) {
+                if (in_array(array_sum($arr), $sums)) {
                     array_push($arrMsg, $v.' ('.array_sum($arr).')');
                     array_push($numbers, $v);
                 }
             }
             if (sizeof($numbers)==5) break;
-        } */
+            sleep(1);
+        }
+        $msg = "==========\n\n";
+        $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
+        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= implode("\n", $arrMsg);
+
+        $re = array();
+        $re['msg'] = $msg;
+        $re['result'] = $this->slackSend($msg);
+        $this->insertRecommend($numbers, $nextLno);
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    private function bombtest() // 테스트용 메서드 // 사용안함
+    {
+        $arrMsg = array();
+        $numbers = array();
+        $nextLno = $this->getNextLno();
+        $arr = $this->getArrayList($nextLno);
+        $sums = $arr['sums'];
+
+        for ($i=0 ; $i < 100 ; $i++) {
+            $tmp = $this->getBombList();
+            foreach ($tmp as $k=>$v) {
+                $arr = explode(',', $v);
+                if (in_array(array_sum($arr), $sums)) {
+                    array_push($arrMsg, $v.' ('.array_sum($arr).')');
+                    array_push($numbers, $v);
+                }
+            }
+            if (sizeof($numbers)==5) break;
+            sleep(1);
+        }
+        $this->debug($sums);
+        $this->debug($arrMsg);
+        $this->debug($numbers);
     }
 
     private function getBombList()

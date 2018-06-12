@@ -21,6 +21,13 @@ $(document).ready(function(){
         });
     });
 
+    $('.btnBombTest').on('click', function(){
+        var url = $(this).data('url');
+        $.get(url, function(){
+            // $('.btnRecommendList').trigger('click');
+        });
+    });
+
     $('.btnLottoDel').on('click', function(){
         setNextLno();
         var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
