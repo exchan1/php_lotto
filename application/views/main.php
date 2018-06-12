@@ -43,20 +43,6 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
-        <!-- <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li class="dropdown-header">Nav header</li>
-            <li><a href="#">Separated link</a></li>
-            <li><a href="#">One more separated link</a></li>
-        </ul>
-        </li> -->
     </ul>
     </div><!--/.nav-collapse -->
 </div>
@@ -105,12 +91,12 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-primary btnSlackTest">Slack Test</button>
-        <button type="button" class="btn btn-primary btnRecommend" data-url="/?mode=autolotto">로또추천</button>
+        <button type="button" class="btn btn-success btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
+        <button type="button" class="btn btn-success btnRecommend" data-url="/?mode=autolotto">로또추천</button>
+        <button type="button" class="btn btn-info btnRecommendList" data-url="/?mode=recommendList">List</button>
         <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록</button>
         <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=lottoresult">당첨확인</button>
-        <button type="button" class="btn btn-primary btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
-        <button type="button" class="btn btn-primary btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
-        <button type="button" class="btn btn-primary btnRecommendList" data-url="/?mode=recommendList">Recommend List</button>
+        <button type="button" class="btn btn-danger btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
     </div>
 </div>
 <!-- /container -->
@@ -119,13 +105,3 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 
 </body>
 </html>
-
-
-<!-- http://www.lottobomb.com/main/home -->
-
-<!-- ============
-3 6 12 24 35 36
-3 9 12 33 41 43
-4 6 11 27 29 42
-1 6 7 15 33 39
-10 11 29 36 43 45 -->
