@@ -10,8 +10,7 @@ class Welcome extends CI_Controller
      * @author : dkkim <exchan1@gmail.com>
      * @todo : Main Controller 접근 기능 수정 필요함.
      */
-
-     private $_point = 0.31;
+    private $_point = 0.31;
 
     public function __construct()
     {
