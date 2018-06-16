@@ -45,7 +45,8 @@ $(document).ready(function(){
     });
 
     $('.btnRecommendList').on('click', function(){
-        setNextLno();
+        var nextNo = $.trim($('#slackMsg').val());
+        if (0==nextNo.length) setNextLno();
         var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
         var html = '';
         $('.rec_list').remove();
