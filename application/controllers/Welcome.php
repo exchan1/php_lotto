@@ -11,12 +11,14 @@ class Welcome extends CI_Controller
      * @todo : Main Controller 접근 기능 수정 필요함.
      */
     private $_point = 0.31;
+    private $_today = '';
 
     public function __construct()
     {
         parent::__construct();
         $this->load->library(array('Snoopy'));
         $this->load->model(array('MainModel'));
+        $this->_today = date("Y.m.d h:i");
     }
 
     public function _remap($method, $args = array())
@@ -97,7 +99,7 @@ class Welcome extends CI_Controller
         $nums       = $this->MainModel->getNos();
         $in_no      = array();
         $msg        = "*자동 로또 번호 등록 안내* \n\n";
-        $msg        .= "*".date("Y.m.d h:i")."*\n";
+        $msg        .= "*".$this->_today."*\n";
         foreach ($no as $k=>$v) {
             if (!in_array($v, $nums)) {
                 $this->insertNo($v);
@@ -109,6 +111,7 @@ class Welcome extends CI_Controller
             $msg .= ">>> 아래 회차 등록\n\n";
             $msg .= implode(',', $in_no);
             $this->slackSend($msg);
+            $this->lottoresult();
         } else {
             $this->slackSend($msg.'>>> 모든 회차가 등록 되어 있음.');
         }
@@ -170,7 +173,7 @@ class Welcome extends CI_Controller
         }
         $msg = "==========\n\n";
         $msg .= "*`lottobomb` {$lno}회차 당첨안내*\n";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= "*".$this->_today."*\n";
         $msg .= "*당첨번호 : ".implode(',', $res)."*\n";
         $msg .= implode("\n", $numbers);
         $this->slackSend($msg);
@@ -217,7 +220,7 @@ class Welcome extends CI_Controller
 
     private function recommend($msg, $nextLno)
     {
-        $msg .= ":smile: *".date("Y.m.d h:i")."* :smile:\n";
+        $msg .= ":smile: *".$this->_today."* :smile:\n";
         $arr = $this->getArrayList($nextLno);
         $list = $arr['list'];
         $nums = $arr['nums'];
@@ -277,7 +280,7 @@ class Welcome extends CI_Controller
         }
         $msg = "==========\n\n";
         $msg .= "*`lottobomb` {$nextLno}회차 추천*\n";
-        $msg .= "*".date("Y.m.d h:i")."*\n";
+        $msg .= "*".$this->_today."*\n";
         $msg .= implode("\n", $arrMsg);
 
         $re = array();
@@ -341,6 +344,22 @@ class Welcome extends CI_Controller
         if (!empty($kai)) {
             $this->MainModel->deleteRecommend($kai);
         }
+        $re['msg'] = $kai.'회차 추첨번호 삭제';
+        $re['date'] = $this->_today;
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    public function lottoNodel()
+    {
+        $kai = $this->input->get_post('kai');
+        if (!empty($kai)) {
+            $this->MainModel->deleteLotto($kai);
+        }
+        $re['msg'] = $kai.'회차 당첨번호 삭제';
+        $re['date'] = $this->_today;
+        header('Content-Type: application/json');
+        echo json_encode($re);
     }
 
     private function recommendList()

@@ -36,6 +36,14 @@ $(document).ready(function(){
         });
     });
 
+    $('.lottoNodel').on('click', function(){
+        setLastLno();
+        var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
+        $.get(url, function(){
+            $('.btnRecommendList').trigger('click');
+        });
+    });
+
     $('.btnRecommendList').on('click', function(){
         setNextLno();
         var url = $(this).data('url')+'&kai='+$('#slackMsg').val();
@@ -65,4 +73,8 @@ $(document).ready(function(){
 
 function setNextLno() {
     $('#slackMsg').val(($('#kaiList option:first').val()*1)+1);
+}
+
+function setLastLno() {
+    $('#slackMsg').val(($('#kaiList option:first').val()*1));
 }
