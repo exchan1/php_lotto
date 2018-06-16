@@ -70,6 +70,10 @@ $(document).ready(function(){
             $('.rec_list').children('td, th').css('background-color','#eee');
         });
     });
+
+    $('.btnMessageSet').on('click', function(){
+        $('#slackMsg').val(($('#kaiList option:selected').val()*1));
+    });
 });
 
 function setNextLno() {
