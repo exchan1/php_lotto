@@ -17,7 +17,7 @@ class Welcome extends CI_Controller
     {
         parent::__construct();
         $this->load->library(array('Snoopy'));
-        $this->load->model(array('MainModel'));
+        $this->load->model(array('MainModel', 'EngModel'));
         $this->_today = date("Y.m.d h:i");
     }
 
@@ -51,6 +51,7 @@ class Welcome extends CI_Controller
             'data'=>$no
             ,'lotto'=>$lottoNo
             ,'class' => __CLASS__
+            ,'mode' => $this->input->get('mode')
         );
 
         $this->MainModel->insertLotto($kai, $lottoNo);
@@ -375,6 +376,95 @@ class Welcome extends CI_Controller
         return $this->MainModel->getLotNo()+1;
     }
 
+    private function returnJson($re)
+    {
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
+    public function englist()
+    {
+        $data['mode'] = $this->input->get('mode');
+        $this->load->view('header', $data);
+        $this->load->view('eng_list', $data);
+        $this->load->view('footer', $data);
+    }
+
+    private function englist_ajax()
+    {
+        $param = array();
+        $re = $this->EngModel->getBigvoca($param);
+        $this->returnJson($re);
+    }
+
+    private function insertEng()
+    {
+        $re['code'] = 500;
+        $param = array(
+            'eng' => $this->input->post('eng')
+            ,'ko' => $this->input->post('ko')
+        );
+        $result = $this->EngModel->insertBigvoca($param);
+        if ($result) {
+            $re['code'] = 200;
+            $re['seq'] = $result;
+        }
+        $this->returnJson($re);
+    }
+
+    private function updateEng()
+    {
+        $re['code'] = 500;
+        $param = array(
+            'eng' => $this->input->post('eng')
+            ,'ko' => $this->input->post('ko')
+        );
+        $result = $this->EngModel->updateBigvoca($param, $this->input->post('idx'));
+        if ($result) {
+            $re['code'] = 200;
+            $re['seq'] = $result;
+        }
+        $this->returnJson($re);
+    }
+
+    private function deleteEng()
+    {
+        $re['code'] = 500;
+        $param = array('idx'=>$this->input->post('idx'));
+        $result = $this->EngModel->deleteBigvoca($param);
+        if ($result) {
+            $re['code'] = 200;
+            $re['seq'] = $result;
+        }
+        $this->returnJson($re);
+    }
+
+    public function wordlist()
+    {
+        $data['mode'] = $this->input->get('mode');
+        $this->load->view('header', $data);
+        $this->load->view('word_list', $data);
+        $this->load->view('footer', $data);
+    }
+
+    public function quiz()
+    {
+        $data['mode'] = $this->input->get('mode');
+        $this->load->view('header', $data);
+        $this->load->view('quiz_list', $data);
+        $this->load->view('footer', $data);
+    }
+
+    public function getquizlist()
+    {
+        $re['code'] = 500;
+        $result = $this->EngModel->getBigvocaQuiz();
+        if ($result) {
+            $re['code'] = 200;
+            $re['list'] = $result;
+        }
+        $this->returnJson($re);
+    }
 
 
 
