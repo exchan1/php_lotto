@@ -55,7 +55,10 @@ class Welcome extends CI_Controller
         );
 
         $this->MainModel->insertLotto($kai, $lottoNo);
+        // $this->load->view('main', $data);
+        $this->load->view('header', $data);
         $this->load->view('main', $data);
+        $this->load->view('footer', $data);
     }
 
     private function getHtml($kai)

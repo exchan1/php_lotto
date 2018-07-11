@@ -29,12 +29,19 @@ $(document).ready(function () {
     $('.btnRecommendas').on('click', function () {
         var url = $(this).data('url') + '&kai=' + $('#slackMsg').val();
         $.get(url, function (data) {
-            console.log(data);
-            var html = '';
+            $('.rec_list').remove();
+            var html = '', tb = '<ul class="list-group">', re_str = '', liClass = '', re_arr=[];
             var rehtml = '<b>회차</b> : '+$('#slackMsg').val();
+            re_str = $.map(data.result[0], function(i,v) { return i; }).join(',');
+            re_arr = re_str.split(',');
             rehtml += '<br/><b>List</b> : '+data.keys.join(',');
-            rehtml += '<br/><b>Result</b> : '+$.map(data.result[0], function(i,v) { return i; }).join(',');
-            html += '<tr class="rec_list"><td colspan="7">'+rehtml+'</td></tr>';
+            rehtml += '<br/><b>Result</b> : '+re_str;
+            $.each(data.nums, function(k,v) {
+                liClass = ($.inArray(k, re_arr)!=-1) ? 'list-group-item-success' : '';
+                tb += '<li class="list-group-item '+liClass+'">'+k+' / '+v+'</li>';
+            });
+            tb += '</ul>';
+            html += '<tr class="rec_list"><td colspan="7">'+rehtml+tb+'</td></tr>';
             $('.table').append(html);
             $('.rec_list').children('td, th').css('background-color', '#eee');
         });

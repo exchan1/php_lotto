@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-
 <?php
 $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 ?>
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>부트스트랩 템플릿</title>
-
-    <!-- 합쳐지고 최소화된 최신 CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <!-- 부가적인 테마 -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <script src="/resources/main.js"></script>
-</head>
-<body role="document">
-
-<? $this->load->view('menu.php'); ?>
 
 <!-- container -->
 <div class="container theme-showcase" role="main" style="margin-top:51px;">
@@ -93,6 +65,3 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
 <!-- /container -->
 
 <input type="hidden" id="kai" value="<?=$kai?>" />
-
-</body>
-</html>
