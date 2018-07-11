@@ -196,7 +196,7 @@ class Welcome extends CI_Controller
     private function getArrayList($nextLno)
     {
         $point = $this->_point;
-        $re['list'] = $this->MainModel->getResultList($this->_point*100);
+        $re['list'] = $this->MainModel->getResultList($this->_point*100, $nextLno);
         $nums = array();
         $sums = array();
         foreach (range(1, 45) as $r) {
@@ -371,6 +371,25 @@ class Welcome extends CI_Controller
         echo json_encode($re);
     }
 
+    private function recommendas()
+    {
+        $kai = $this->input->get_post('kai');
+        $re = $this->getArrayList($kai);
+        $lo_result = $this->MainModel->getLotResult($kai);
+        $nums = $re['nums'];
+        $keys = array();
+
+        $nums_avg = array_sum($nums) / count($nums);
+        foreach ($nums as $k => $v) {
+            if ($nums_avg <= $v) array_push($keys, $k);
+        }
+
+        $re['result'] = $lo_result;
+        $re['keys'] = $keys;
+        header('Content-Type: application/json');
+        echo json_encode($re);
+    }
+
     private function getNextLno()
     {
         return $this->MainModel->getLotNo()+1;
@@ -382,6 +401,7 @@ class Welcome extends CI_Controller
         echo json_encode($re);
     }
 
+    //======================================================= Eng
     public function englist()
     {
         $data['mode'] = $this->input->get('mode');

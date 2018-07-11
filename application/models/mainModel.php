@@ -73,14 +73,18 @@ class MainModel extends CI_Model
             ->result_array();
     }
 
-    public function getResultList($limit)
+    public function getResultList($limit, $lno='')
     {
-        return $this->db
+        if (''!=$lno) {
+            $this->db->where('lno < ', $lno);
+        }
+        $re = $this->db
             ->select('n1,n2,n3,n4,n5,n6')
             ->order_by('lno', 'desc')
             ->limit($limit)
             ->get('lotto')
             ->result_array();
+        return $re;
     }
 
     public function deleteRecommend($kai)

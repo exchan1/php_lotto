@@ -76,14 +76,17 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-primary btnSlackTest">Slack Test</button>
+        <button type="button" class="btn btn-info btnRecommendList" data-url="/?mode=recommendList">List</button>
+        <button type="button" class="btn btn-info btnRecommendas" data-url="/?mode=recommendas">분석</button>
         <button type="button" class="btn btn-success btnLottoBomb" data-url="/?mode=bomb">lottobomb Site</button>
         <button type="button" class="btn btn-success btnRecommend" data-url="/?mode=autolotto">로또추천</button>
-        <button type="button" class="btn btn-info btnRecommendList" data-url="/?mode=recommendList">List</button>
-        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록</button>
-        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=lottoresult">당첨확인</button>
-        <button type="button" class="btn btn-danger btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
     </div>
     <div class="form-group">
+        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=autolottono">로또 등록</button>
+        <button type="button" class="btn btn-primary btnLottoNo" data-url="/?mode=lottoresult">당첨확인</button>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-danger btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
         <button type="button" class="btn btn-danger lottoNodel" data-url="/?mode=lottoNodel">등록 Del</button>
     </div>
 </div>

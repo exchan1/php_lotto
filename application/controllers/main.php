@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * 로또 파싱 & 분석 프로그램 Beta Version
- * 
+ *
  * @author : dkkim <exchan1@gmail.com>
  */
 class Main extends CI_Controller
@@ -18,6 +18,7 @@ class Main extends CI_Controller
 
     public function index()
     {
+        echo 'TEST';
     }
 
     public function main()
@@ -113,4 +114,4 @@ class Main extends CI_Controller
 }
 
 
-// https://hooks.slack.com/services/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 
+// https://hooks.slack.com/services/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
