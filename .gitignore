@@ -6,3 +6,4 @@ application/config/database.php
 **/*.xml
 **/*.iml
 application/config/config.php
+.vscode/**
