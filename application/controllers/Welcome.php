@@ -55,7 +55,6 @@ class Welcome extends CI_Controller
         );
 
         $this->MainModel->insertLotto($kai, $lottoNo);
-        // $this->load->view('main', $data);
         $this->load->view('header', $data);
         $this->load->view('main', $data);
         $this->load->view('footer', $data);
@@ -216,7 +215,7 @@ class Welcome extends CI_Controller
             $point = $point - 0.01;
         }
         rsort($sums);
-        array_splice($sums, 10);
+        array_splice($sums, 15);
         $re['sums'] = $sums;
         $re['nums'] = $nums;
         return $re;
@@ -234,7 +233,8 @@ class Welcome extends CI_Controller
 
         $nums_avg = array_sum($nums) / count($nums);
         foreach ($nums as $k => $v) {
-            if ($nums_avg <= $v) array_push($keys, $k);
+            // if ($nums_avg <= $v) array_push($keys, $k);
+            array_push($keys, $k);
         }
         $i = 0;
         for (;;) {

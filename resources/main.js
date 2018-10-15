@@ -56,7 +56,7 @@ $(document).ready(function () {
     });
 
     $('.lottoNodel').on('click', function () {
-        setLastLno();
+        // setLastLno();
         var url = $(this).data('url') + '&kai=' + $('#slackMsg').val();
         $.get(url, function () {
             $('.btnRecommendList').trigger('click');
