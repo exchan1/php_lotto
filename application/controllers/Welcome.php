@@ -12,6 +12,7 @@ class Welcome extends CI_Controller
      */
     private $_point = 0.31;
     private $_today = '';
+    private $_dev = false;
 
     public function __construct()
     {
@@ -147,7 +148,10 @@ class Welcome extends CI_Controller
                 ,'n5' => $tmp[4]
                 ,'n6' => $tmp[5]
             );
-            $this->MainModel->insertRecommend($param);
+            if ($this->_dev) {
+            } else {
+                $this->MainModel->insertRecommend($param);
+            }
         }
     }
 
@@ -522,13 +526,17 @@ class Welcome extends CI_Controller
             "text"          =>  $message,
             "icon_emoji"    =>  $icon
         ));
-        $ch = curl_init(config_item('slackHook'));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
+        if ($this->_dev) {
+            return true;
+        } else {
+            $ch = curl_init(config_item('slackHook'));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            return $result;
+        }
     }
 }
 
