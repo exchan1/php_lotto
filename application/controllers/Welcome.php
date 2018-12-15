@@ -63,13 +63,14 @@ class Welcome extends CI_Controller
 
     private function getHtml($kai)
     {
-        $getUrl = "http://www.645lotto.net/gameResult.do?method=byWin&drwNo=".$kai;
+        $getUrl = "https://www.dhlottery.co.kr/gameResult.do?method=byWin&drwNo=".$kai;
         return $this->snoopy->fetch($getUrl);
     }
 
     private function getLotto($html)
     {
-        $pattern = '/img src="\/img\/common_new\/ball_[0-9]*.png/';
+        // $pattern = '/img src="\/img\/common_new\/ball_[0-9]*.png/';
+        $pattern = '/<span class=\"ball_645.*\">(.*?)<\/span>/';
         preg_match_all($pattern, $this->snoopy->results, $out);
         $arrNo = array();
         for ($i=0;$i<=6;$i++) {
@@ -85,13 +86,13 @@ class Welcome extends CI_Controller
 
     private function getNo($kai)
     {
-        $pattern = '/<option value="(.*?)"\s*>(.*?)<\/option>/';
+        $pattern = '/<option>(.*?)<\/option>/';
         preg_match_all($pattern, $this->snoopy->results, $out, PREG_SET_ORDER);
         $arrNo = array();
         $select = '';
         $size = sizeof($out);
         for ($i=0 ; $i < $size ; $i++ ) {
-            $arrNo[$i] = $out[$i][1];
+            $arrNo[$i] = $out[$i][0];
         }
         return $arrNo;
     }
@@ -112,10 +113,10 @@ class Welcome extends CI_Controller
         }
 
         if (!empty($in_no)) {
-            $msg .= ">>> 아래 회차 등록\n\n";
+            /* $msg .= ">>> 아래 회차 등록\n\n";
             $msg .= implode(',', $in_no);
             $this->slackSend($msg);
-            $this->lottoresult();
+            $this->lottoresult(); */
         } else {
             $this->slackSend($msg.'>>> 모든 회차가 등록 되어 있음.');
         }
