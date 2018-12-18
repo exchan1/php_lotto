@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+ini_set("xdebug.var_display_max_children", -1);
+ini_set("xdebug.var_display_max_data", -1);
+ini_set("xdebug.var_display_max_depth", -1);
 
 class Welcome extends CI_Controller
 {
@@ -74,11 +77,10 @@ class Welcome extends CI_Controller
         preg_match_all($pattern, $this->snoopy->results, $out);
         $arrNo = array();
         for ($i=0;$i<=6;$i++) {
-            $num[$i] = str_replace(".png", "", str_replace('img src="/img/common_new/ball_', "", $out[0][$i]));
             if ($i==6) {
-                $arrNo[$i] = $num[$i];
+                $arrNo[$i] = $out[1][$i]+0;
             } else {
-                $arrNo[$i] = $num[$i];
+                $arrNo[$i] = $out[1][$i]+0;
             }
         }
         return $arrNo;
@@ -92,7 +94,7 @@ class Welcome extends CI_Controller
         $select = '';
         $size = sizeof($out);
         for ($i=0 ; $i < $size ; $i++ ) {
-            $arrNo[$i] = $out[$i][0];
+            $arrNo[$i] = $out[$i][1];
         }
         return $arrNo;
     }
@@ -113,10 +115,10 @@ class Welcome extends CI_Controller
         }
 
         if (!empty($in_no)) {
-            /* $msg .= ">>> 아래 회차 등록\n\n";
+            $msg .= ">>> 아래 회차 등록\n\n";
             $msg .= implode(',', $in_no);
             $this->slackSend($msg);
-            $this->lottoresult(); */
+            $this->lottoresult();
         } else {
             $this->slackSend($msg.'>>> 모든 회차가 등록 되어 있음.');
         }
