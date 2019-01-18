@@ -93,6 +93,13 @@ $(document).ready(function () {
     $('.btnMessageSet').on('click', function () {
         $('#slackMsg').val(($('#kaiList option:selected').val() * 1));
     });
+
+    $('.btnBigvoca').on('click', function () {
+        var url = $(this).data('url') + '&kai=' + $('#slackMsg').val();
+        $.get(url, function (d) {
+            console.log(d);
+        });
+    });
 });
 
 function setNextLno() {

@@ -496,6 +496,25 @@ class Welcome extends CI_Controller
         $this->returnJson($re);
     }
 
+    public function voca()
+    {
+        $re['code'] = 500;
+        $result = $this->EngModel->getBigvocaQuiz();
+        if ($result) {
+            $re['code'] = 200;
+            $re['list'] = $result;
+        }
+        foreach ($result as $k=>$v) {
+            $msg = $v['eng'].' / '.$v['ko'];
+            /* $url = 'https://translate.google.co.kr/?hl=ko&tab=wT&authuser=0#view=home&op=translate&sl=en&tl=ko&text='.$v['eng'];
+            $link = '[{"fallback":"구글번역","actions":[{"type":"button","text":"Link","url":"'.$url.'"}]}]'; */
+            $slack_result = $this->slackSend($msg, 'bigvoca', '', $link);
+            $re['list'][$k]['msg'] = $msg;
+            $re['list'][$k]['link'] = $link;
+            $re['list'][$k]['slack'] = $slack_result;
+        }
+        $this->returnJson($re);
+    }
 
 
 
@@ -521,14 +540,18 @@ class Welcome extends CI_Controller
         echo json_encode($re);
     }
 
-    private function slackSend($message, $room = "lottobot", $icon = ":longbox:")
+    private function slackSend($message, $room = "lottobot", $icon = ":longbox:", $attach='')
     {
         $room = ($room) ? $room : "lottobot";
-        $data = "payload=" . json_encode(array(
+        $arr = array(
             "channel"       =>  "#{$room}",
             "text"          =>  $message,
             "icon_emoji"    =>  $icon
-        ));
+        );
+        if (!empty($attach)) {
+            $arr['attachments'] = $attach;
+        }
+        $data = "payload=" . json_encode($arr);
         if ($this->_dev) {
             return true;
         } else {

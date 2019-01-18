@@ -61,6 +61,9 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
         <button type="button" class="btn btn-danger btnLottoDel" data-url="/?mode=lottodel">lotto Del</button>
         <button type="button" class="btn btn-danger lottoNodel" data-url="/?mode=lottoNodel">등록 Del</button>
     </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-danger btnBigvoca" data-url="/?mode=voca">Bigvoca</button>
+    </div>
 </div>
 <!-- /container -->
 

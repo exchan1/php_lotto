@@ -44,4 +44,13 @@ class EngModel extends CI_Model
             ->update('bigvoca', $param);
     }
 
+    // bigvoca
+    public function getRandomVoca()
+    {
+        $this->db->order_by('rand()');
+        $this->db->limit(10);
+        $query = $this->db->get('bigvoca');
+        return $query->result_array();
+    }
+
 }
