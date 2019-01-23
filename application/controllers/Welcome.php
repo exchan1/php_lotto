@@ -505,17 +505,13 @@ class Welcome extends CI_Controller
             $re['list'] = $result;
         }
         foreach ($result as $k=>$v) {
-            $msg = $v['eng'].' / '.$v['ko'];
-            /* $url = 'https://translate.google.co.kr/?hl=ko&tab=wT&authuser=0#view=home&op=translate&sl=en&tl=ko&text='.$v['eng'];
-            $link = '[{"fallback":"구글번역","actions":[{"type":"button","text":"Link","url":"'.$url.'"}]}]'; */
-            $slack_result = $this->slackSend($msg, 'bigvoca', '', $link);
+            $msg = $v['eng'].' / '.$v['ko'].' / <https://dic.daum.net/search.do?q='.$v['eng'].'|Link>';
+            $link = '';
             $re['list'][$k]['msg'] = $msg;
-            $re['list'][$k]['link'] = $link;
-            $re['list'][$k]['slack'] = $slack_result;
+            $slack_result = $this->slackSend($msg, 'bigvoca', '', $link);
         }
         $this->returnJson($re);
     }
-
 
 
 
