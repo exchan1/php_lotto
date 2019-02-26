@@ -505,10 +505,27 @@ class Welcome extends CI_Controller
             $re['list'] = $result;
         }
         foreach ($result as $k=>$v) {
-            $msg = $v['eng'].' / '.$v['ko'].' / <https://dic.daum.net/search.do?q='.$v['eng'].'|Link>';
+            $msg = '*<https://dic.daum.net/search.do?q='.$v['eng'].'|'.$v['eng'].'>* / '.$v['ko'];
             $link = '';
             $re['list'][$k]['msg'] = $msg;
             $slack_result = $this->slackSend($msg, 'bigvoca', '', $link);
+        }
+        $this->returnJson($re);
+    }
+
+    public function han()
+    {
+        $re['code'] = 500;
+        $result = $this->EngModel->getHanQuiz();
+        if ($result) {
+            $re['code'] = 200;
+            $re['list'] = $result;
+        }
+        foreach ($result as $k=>$v) {
+            $msg = '*<https://dic.daum.net/search.do?q='.$v['han'].'|'.$v['han'].'>* / '.$v['ko'];
+            $link = '';
+            $re['list'][$k]['msg'] = $msg;
+            $slack_result = $this->slackSend($msg, 'hanja', '', $link);
         }
         $this->returnJson($re);
     }

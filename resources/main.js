@@ -100,6 +100,13 @@ $(document).ready(function () {
             console.log(d);
         });
     });
+
+    $('.btnHan').on('click', function () {
+        var url = $(this).data('url') + '&kai=' + $('#slackMsg').val();
+        $.get(url, function (d) {
+            console.log(d);
+        });
+    });
 });
 
 function setNextLno() {

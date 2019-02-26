@@ -53,4 +53,12 @@ class EngModel extends CI_Model
         return $query->result_array();
     }
 
+    public function getHanQuiz()
+    {
+        return $this->db
+            ->order_by('rand()')
+            ->limit(10)
+            ->get('han')->result_array();
+    }
+
 }

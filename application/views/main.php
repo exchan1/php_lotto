@@ -63,6 +63,7 @@ $kai = (isset($_GET['kai'])) ? $_GET['kai'] : 1;
     </div>
     <div class="form-group">
         <button type="button" class="btn btn-danger btnBigvoca" data-url="/?mode=voca">Bigvoca</button>
+        <button type="button" class="btn btn-danger btnHan" data-url="/?mode=han">한자</button>
     </div>
 </div>
 <!-- /container -->
